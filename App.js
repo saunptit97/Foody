@@ -75,13 +75,13 @@
 
 
 import React from 'react';
-import { createStackNavigator, createAppContainer ,createBottomTabNavigator} from "react-navigation";
+import {createSwitchNavigator, createStackNavigator, createAppContainer ,createBottomTabNavigator} from "react-navigation";
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import Routes from './src/Routes';
-const LoginStack = createStackNavigator({
-  Login: LoginScreen,
+const LoginStack = createSwitchNavigator({
+  Login: Routes,
   Signup: SignupScreen,
-   Routes: Routes
+  Routes: Routes
 });
 export default createAppContainer(LoginStack);

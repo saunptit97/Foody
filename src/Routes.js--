@@ -1,20 +1,8 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import HomeScreen from './screens/HomeScreen';
-import CartScreen from './screens/CartScreen';
 import SettingScreen from './screens/SettingScreen';
 import { createStackNavigator, createAppContainer ,createBottomTabNavigator} from "react-navigation";
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import LoginScreen from "./screens/LoginScreen";
-import DetailScreen from "./screens/DetailScreen";
-import SignupScreen from "./screens/SignupScreen";
-import CheckoutScreen from './screens/CheckoutScreen';
-import SuccessScreen from "./screens/SuccessScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import PolicyScreen from './screens/PolicyScreen';
-import HistoryScreen from './screens/HistoryScreen';
-import ConfigSCreen from './screens/ConfigScreen';
-import InvoiceScreen from './screens/InvoiceScreen';
 const headerOpt = {
   headerStyle: {
     backgroundColor: '#d50000',
@@ -27,48 +15,12 @@ const headerOpt = {
     flex: 1
   },
 }
+
 const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen,
-    Detail: DetailScreen
-  },
-  {
-    initialRouteName: 'Home',
-    defaultNavigationOptions: {
-        ...headerOpt
-    },
-  }
+	{
+		Home: HomeScreen
+	}
 );
-
-const SettingsStack = createStackNavigator(
-  {
-    Setting: SettingScreen,
-    Profile: ProfileScreen,
-    Policy: PolicyScreen,
-    History: HistoryScreen,
-    Config: ConfigSCreen,
-    Invoice: InvoiceScreen
-  },
-  {
-    defaultNavigationOptions: {
-      ...headerOpt
-    }
-  }
-);
-
-const CartStack = createStackNavigator(
-  {
-    Cart: CartScreen,
-    Checkout: CheckoutScreen,
-    Success: SuccessScreen
-  },
-  {
-    defaultNavigationOptions: {
-      ...headerOpt
-    }
-  }
-)
-
 const TabNavigator = createBottomTabNavigator(
 {
     Home: HomeStack,
@@ -103,4 +55,28 @@ const TabNavigator = createBottomTabNavigator(
     },
     }
 );
- export default createAppContainer(TabNavigator);
+
+export default createAppContainer(TabNavigator);
+
+
+// export default class Routes extends React.Component{
+// 	static navigationOptions = {
+//         headerStyle:{
+//             backgroundColor: '#d50000',
+//             shadowRadius: 0,
+//             shadowOffset: {
+//             height: 0,
+//             },
+//         shadowColor: 'transparent',
+//         borderBottomWidth: 0,
+//         elevation:0
+//         }
+//       };
+// 	render(){
+// 		return(
+// 			<View>
+// 				<Text>Home</Text>
+// 			</View>
+// 		);
+// 	}
+// }

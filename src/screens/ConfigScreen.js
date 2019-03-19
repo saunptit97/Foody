@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, View, Text , TouchableOpacity} from 'react-native';
 
-export default class ProfileScreen extends React.Component {
+export default class ConfigScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: 'Home',
