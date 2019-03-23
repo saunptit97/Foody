@@ -52,7 +52,7 @@ export default class CartScreen extends Component {
                             <View style={styles.image_container}>
                                 <Image style={styles.image} source={item.url} />
                             </View>
-                            <View>
+                            <View style={styles.image_container} >
                                 <Text style={styles.name} onPress={() => this.props.navigation.navigate('Signup')}> {item.name} </Text>
                                 <Text style={styles.description}>Giá: 30.000 đ</Text>
                                 <Text style={styles.description}>Số lượng: 1</Text>
@@ -73,7 +73,7 @@ export default class CartScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row', 
+        // flexDirection: 'row', 
         margin: 10,
         borderBottomWidth: 8,
         borderColor: '#f6f8fa'
@@ -85,10 +85,11 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     image_container: {
-        width: width/2 -50
+        width: width/2 -20,
+        marginLeft: 5
     },
     image :{
-       width: 150,
+       width: '100%',
        height: 100,
        marginBottom: 10
     },
@@ -104,11 +105,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         color: '#000',
-        marginBottom: 5
+
+        // marginBottom: 5
       },
      description: {
          fontSize: 12,
-         marginLeft: 5
+        marginLeft: 5
+         // marginLeft: 5
      },
      total: {
          margin: 20

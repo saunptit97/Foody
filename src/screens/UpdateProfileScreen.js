@@ -1,71 +1,63 @@
 import React from 'react';
-import { Button, View, Text , TouchableOpacity, StyleSheet, Image,ImageBackground} from 'react-native';
+import { Button, View, Text , TouchableOpacity, StyleSheet, Image,ImageBackground, ScrollView, TextInput} from 'react-native';
 import firebase from 'firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import img from './../images/logo.jpg';
 import bg from './../images/bg.jpg';
-export default class ProfileScreen extends React.Component {
+
+export default class UpdateProfileScreen extends React.Component {
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: 'Thông tin cá nhân',
+    headerTitle: 'Cập nhật thông tin',
   };
 
   render() {
-  //   componentWillMount(){
-  //   var config = {
-  //     apiKey: "AIzaSyDuiS7bYSd_HIIx8fi2WKdUibJpw5CI42M",
-  //     authDomain: "food-c4614.firebaseapp.com",
-  //     databaseURL: "https://food-c4614.firebaseio.com",
-  //     projectId: "food-c4614",
-  //     storageBucket: "food-c4614.appspot.com",
-  //     messagingSenderId: "752684496596"
-  //   };
-  //   firebase.initializeApp(config);
-  // }
-    // var user = firebase.auth().currentUser;
     return (
-      <View>
+      <ScrollView>
+<View style={{margin: 5}}>
       <View style={styles.infor}>
          <Image source={img} style={styles.img} />
-        <Text style={{textAlign: 'center', fontWeight: 'bold'}}>Roger</Text>
-   
-       
+          <Text>Tải ảnh</Text>
       </View>
      <View style={{ margin: 5}}>
         <View style = {styles.container}>
+          <Text style={styles.title}><Icon name="ios-person" color="#333"  size={16} iconStyle={{marginRight: 5}} />Tên hiển thị</Text>
+          <TextInput style={styles.input} value="Roger"
+            // onChange={(fullname) => this.setState}
+          />
+        </View>
+        <View style = {styles.container}>
           
           <Text style={styles.title}><Icon name="ios-mail" color="#333"  size={16} iconStyle={{marginRight: 5}} />Email</Text>
-          <Text>nts1997z@gmail.com</Text>
+          <TextInput style={styles.input} value="nts1997z@gmail.com" />
         </View>
         <View style = {styles.container}>
           <Text  style={styles.title}><Icon name="ios-phone-landscape" color="#333"  size={16} />Số điện thoại</Text>
-          <Text>0977.695.448</Text>
+          <TextInput style={styles.input} value="0977695448"/>
         </View>
         <View style = {styles.container}>
           <Text  style={styles.title}><Icon name="ios-person-add" color="#333"  size={16} />Địa chỉ</Text>
-          <Text>Số 10 - Ngõ 131 - Nguyễn Văn Trỗi - Hà Đông - Hà Nội</Text>
+          <TextInput style={styles.input} value="Ngõ 133- Nguyễn Văn Trỗi - Hà Đông - Hà Nội" />
         </View>
          <TouchableOpacity  style={styles.button} onPress={() => this.props.navigation.navigate('Update')}>
-              <Text style={styles.inputLogin}>Chỉnh sửa thông tin</Text>
+              <Text style={styles.inputLogin}>Cập nhật</Text>
           </TouchableOpacity> 
           </View>
       </View>
+      </ScrollView>
+      
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    borderBottomWidth: 5,
-    borderColor: '#ccc', 
-    
+    padding: 20,    
   },
   infor: {
-  justifyContent: 'center', alignItems: 'center', 
-  backgroundColor:'#e2e1e7',
-  padding: 50
-  
+    alignItems: 'center',
+    justifyContent: 'center'
+    
   },
   img: {
     width: 100,
@@ -86,5 +78,11 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         textAlign: 'center',
+    },
+    input: {
+      borderColor: '#ccc',
+      backgroundColor:'rgba(255,255,255,0.3)',
+      borderWidth: 1,
+      height: 50
     }
 });

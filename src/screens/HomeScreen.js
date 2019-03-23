@@ -97,7 +97,7 @@ export default class HomeScreen extends React.Component {
     // headerRight: <ButtonSearch/>
     headerMode: 'none',
      headerStyle: {
-      backgroundColor: '#f4511e',
+      backgroundColor: '#d50000',
     },
   };
   state = {

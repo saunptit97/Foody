@@ -14,7 +14,7 @@ import { List, ListItem } from 'react-native-elements';
 import SettingsList from 'react-native-settings-list';
 export default class SettingScreen extends React.Component {
   static navigationOptions = {
-    headerTitle: 'Setting',
+    headerTitle: 'Cài đặt',
   };
 
   render() {

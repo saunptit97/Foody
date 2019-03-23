@@ -15,6 +15,7 @@ import PolicyScreen from './screens/PolicyScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import ConfigSCreen from './screens/ConfigScreen';
 import InvoiceScreen from './screens/InvoiceScreen';
+import UpdateProfileScreen from './screens/UpdateProfileScreen';
 const headerOpt = {
   headerStyle: {
     backgroundColor: '#d50000',
@@ -22,9 +23,9 @@ const headerOpt = {
   headerTintColor: '#fff',
   headerTitleStyle: {
     fontWeight: 'bold',
-    alignSelf: 'center',
+    // alignSelf: 'center',
     textAlign: 'center',
-    flex: 1
+    // flex: 1
   },
 }
 const HomeStack = createStackNavigator(
@@ -47,7 +48,8 @@ const SettingsStack = createStackNavigator(
     Policy: PolicyScreen,
     History: HistoryScreen,
     Config: ConfigSCreen,
-    Invoice: InvoiceScreen
+    Invoice: InvoiceScreen,
+    Update: UpdateProfileScreen
   },
   {
     defaultNavigationOptions: {
