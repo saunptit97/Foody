@@ -13,8 +13,8 @@ export default class Form extends Component{
    constructor(props){
         super(props);
         this.state = {
-            email: '',
-            password: ''
+            email: 'Nts1997z@gmail.com',
+            password: 'Nts0977695448'
         }
     }
     componentWillMount(){
@@ -44,6 +44,7 @@ export default class Form extends Component{
                     underlineColorAndroid="rgba(0,0,0,0)"
                     placeholderTextColor="#fff"
                     onChangeText= {(email) => this.setState({email})}
+                    value={this.state.email}
                 />
                 <TextInput 
                     style={styles.inputBox}
@@ -51,7 +52,8 @@ export default class Form extends Component{
                     underlineColorAndroid="rgba(0,0,0,0)"
                     placeholderTextColor="#fff"
                     secureTextEntry={true}
-               onChangeText= {(password) => this.setState({password})}
+                    onChangeText= {(password) => this.setState({password})}
+                    value={this.state.password}
                 />
                 <TouchableOpacity  style={styles.button}   onPress={this.handleSignIn}>
                     <Text style={styles.inputLogin}>Đăng nhập</Text>

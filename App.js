@@ -80,8 +80,15 @@ import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import Routes from './src/Routes';
 const LoginStack = createSwitchNavigator({
-  Login: Routes,
+  Login: LoginScreen,
   Signup: SignupScreen,
   Routes: Routes
 });
 export default createAppContainer(LoginStack);
+// import React from 'react';
+// import AppContainer from './src/test/App';
+// export default class App extends React.Component{
+//   render(){
+//     return <AppContainer/>
+//   }
+// }

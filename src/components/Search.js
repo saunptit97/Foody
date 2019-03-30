@@ -1,6 +1,6 @@
 import React from 'react';
-import { SearchBar } from 'react-native-elements';
 
+import {View, TextInput, Text} from 'react-native';
 export default class Search extends React.Component {
   state = {
     search: '',
@@ -14,10 +14,9 @@ export default class Search extends React.Component {
     const { search } = this.state;
 
     return (
-        <SearchBar
-          lightTheme
-          icon={{ type: 'font-awesome', name: 'search' }}
-          placeholder='Type Here...' />
+       <View>
+          <TextInput placeholder = "Tìm kiếm món ăn, nhà hàng, địa chỉ..."/> <Text>Cart</Text>
+       </View>
     );
   }
 }

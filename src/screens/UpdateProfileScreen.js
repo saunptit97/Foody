@@ -6,12 +6,57 @@ import img from './../images/logo.jpg';
 import bg from './../images/bg.jpg';
 
 export default class UpdateProfileScreen extends React.Component {
+ 
+  constructor(props){
+    super(props);
+    this.state = {
+        fullname: '',
+        email : '',
+        phone: '',
+        address: ''
+    }
+  }
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: 'Cập nhật thông tin',
   };
-
+  handleUpdate = () => {
+    const {fullname, email,phone,address} = this.state;
+    var user = firebase.auth().currentUser;
+    firebase.database().ref('users/' + user.uid).set(
+      {
+          fullname: fullname,
+          email: email,
+          phone: phone,
+          address: address,
+          image: 'https://example.com/jane-q-user/profile.jpg'
+      }
+      ).then(() => this.props.navigation.navigate('Profile')).catch((error) => {
+          console.log(error);
+      });
+  }
+  componentDidMount(){
+    var user = firebase.auth().currentUser;
+    // this.setState({
+    //   fullname: 'Roger'
+    // });
+   firebase.database().ref('users/' + user.uid).once('value', (data)=>{
+    this.setState({
+      fullname: data.val().fullname,
+      email: data.val().email,
+      phone: data.val().phone,
+      address: data.val().address,
+      image: data.val().image,
+    });
+   }).then(function(data) {
+      console.log('AA');
+    });
+  }
   render() {
+    // var {fullname, email, phone,address} = this.state;
+    // var user = firebase.auth().currentUser;
+    // alert(user.uid);
+   
     return (
       <ScrollView>
 <View style={{margin: 5}}>
@@ -22,24 +67,34 @@ export default class UpdateProfileScreen extends React.Component {
      <View style={{ margin: 5}}>
         <View style = {styles.container}>
           <Text style={styles.title}><Icon name="ios-person" color="#333"  size={16} iconStyle={{marginRight: 5}} />Tên hiển thị</Text>
-          <TextInput style={styles.input} value="Roger"
-            // onChange={(fullname) => this.setState}
+          <TextInput style={styles.input} 
+             onChangeText={ (fullname) => this.setState({fullname})}
+             value = {this.state.fullname}
           />
         </View>
         <View style = {styles.container}>
           
           <Text style={styles.title}><Icon name="ios-mail" color="#333"  size={16} iconStyle={{marginRight: 5}} />Email</Text>
-          <TextInput style={styles.input} value="nts1997z@gmail.com" />
+          <TextInput style={styles.input} 
+           onChangeText={ (email) => this.setState({email})}
+            value= {this.state.email}
+          />
         </View>
         <View style = {styles.container}>
           <Text  style={styles.title}><Icon name="ios-phone-landscape" color="#333"  size={16} />Số điện thoại</Text>
-          <TextInput style={styles.input} value="0977695448"/>
+          <TextInput style={styles.input} 
+           onChangeText={ (phone) => this.setState({phone})}
+           value = {this.state.phone}
+          />
         </View>
         <View style = {styles.container}>
           <Text  style={styles.title}><Icon name="ios-person-add" color="#333"  size={16} />Địa chỉ</Text>
-          <TextInput style={styles.input} value="Ngõ 133- Nguyễn Văn Trỗi - Hà Đông - Hà Nội" />
+          <TextInput style={styles.input} 
+           onChangeText={ (address) => this.setState({address})}
+           value = {this.state.address}
+          />
         </View>
-         <TouchableOpacity  style={styles.button} onPress={() => this.props.navigation.navigate('Update')}>
+         <TouchableOpacity  style={styles.button}  onPress={this.handleUpdate}>
               <Text style={styles.inputLogin}>Cập nhật</Text>
           </TouchableOpacity> 
           </View>

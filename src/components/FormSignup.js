@@ -12,7 +12,7 @@ import {
 from 'react-native';
 //  import {firebaseApp} from './../config/Firebase.js';
 
-// import firebase from 'react-native-firebase';
+import firebase from 'firebase';
 export default class FormSignup extends Component{
     constructor(props){
         super(props);

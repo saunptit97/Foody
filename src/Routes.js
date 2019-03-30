@@ -16,6 +16,8 @@ import HistoryScreen from './screens/HistoryScreen';
 import ConfigSCreen from './screens/ConfigScreen';
 import InvoiceScreen from './screens/InvoiceScreen';
 import UpdateProfileScreen from './screens/UpdateProfileScreen';
+import CategoryScreen from './screens/CategoryScreen';
+import FoodScreen from './screens/FoodScreen';
 const headerOpt = {
   headerStyle: {
     backgroundColor: '#d50000',
@@ -31,7 +33,8 @@ const headerOpt = {
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
-    Detail: DetailScreen
+    Detail: DetailScreen,
+    Category: CategoryScreen,
   },
   {
     initialRouteName: 'Home',
@@ -49,7 +52,7 @@ const SettingsStack = createStackNavigator(
     History: HistoryScreen,
     Config: ConfigSCreen,
     Invoice: InvoiceScreen,
-    Update: UpdateProfileScreen
+    Update: UpdateProfileScreen,
   },
   {
     defaultNavigationOptions: {
@@ -60,7 +63,9 @@ const SettingsStack = createStackNavigator(
 
 const CartStack = createStackNavigator(
   {
-    Cart: CartScreen,
+    Cart: {
+      screen: CartScreen
+    },
     Checkout: CheckoutScreen,
     Success: SuccessScreen
   },
@@ -70,7 +75,39 @@ const CartStack = createStackNavigator(
     }
   }
 )
+class IconWithBadge extends React.Component {
+  render() {
+    const { name, badgeCount, color, size } = this.props;
+    return (
+      <View style={{ width: 24, height: 24, margin: 5 }}>
+        <Ionicons name={name} size={size} color={color} />
+        {badgeCount > 0 && (
+          <View
+            style={{
+              position: 'absolute',
+              right: -6,
+              top: -3,
+              backgroundColor: 'red',
+              borderRadius: 6,
+              width: 12,
+              height: 12,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
+              {badgeCount}
+            </Text>
+          </View>
+        )}
+      </View>
+    );
+  }
+}
 
+const HomeIconWithBadge = props => {
+  // You should pass down the badgeCount in some other ways like context, redux, mobx or event emitters.
+  return <IconWithBadge {...props} badgeCount={3} />;
+};
 const TabNavigator = createBottomTabNavigator(
 {
     Home: HomeStack,
@@ -85,12 +122,14 @@ const TabNavigator = createBottomTabNavigator(
         let iconName;
         if (routeName === 'Home') {
             iconName = `ios-home${focused ? '' : ''}`;
+            
             // Sometimes we want to add badges to some icons. 
             // You can check the implementation below.
             // IconComponent = HomeIconWithBadge; 
         } 
         else if (routeName === 'Cart') {
             iconName = `ios-cart${focused ? '' : ''}`;
+            IconComponent = HomeIconWithBadge;
         }else if (routeName === 'Settings') {
             iconName = `ios-settings${focused ? '' : ''}`;
         }

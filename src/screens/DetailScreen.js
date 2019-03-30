@@ -1,29 +1,57 @@
 import React from 'react';
 import {TouchableOpacity,View, Text, Button, Image, StyleSheet} from 'react-native';
-
+import firebase from 'firebase';
 const url = "./../images/1.png";
 export default class DetailScreen extends React.Component {
+    constructor(props){
+      super(props);
+      this.state = {
+        name: '',
+        price: 0,
+        address: '',
+        discription: '',
+        img: ''
+      }
+    }
+    componentDidMount(){
+      const { navigation } = this.props;
+      const id = navigation.getParam('id');
+      const self = this;
+      var storageRef = firebase.storage().ref();
+      var imagesRef = storageRef.child('images');
+      var filename = 'GaDapDat.jpg';
+      var spaceRef = imagesRef.child(filename);
+      var path = spaceRef.fullPath;
+      console.log(spaceRef.getDownloadURL());
+      firebase.database().ref("foods/" + id).once('value', function(data){
+        self.setState({
+          name: data.val().name,
+          price: data.val().price,
+          address: data.val().address,
+          discription: data.val().discription,
+          img: data.val().img
+        });
+        filename = data.val().img
+      });
+     
+     
+      
+      
+    }
     render() {
+      let {name, price, address, discription, img} = this.state;
       return (
-        // <View style={{ flex: 1 , margin: 10}}>
-        //   
-        //   <View>
-        //     <Text >Sườn xào chua ngọt</Text>
-        //     <Text></Text>
-        //   </View>
-        // </View>
         <View>
-
         <View style={styles.container}>
-          <Image style={styles.image} source={require("./../images/1.png") } />
-          <Text style={styles.name}>Sườn xào chua ngọt</Text>
-          <Text style={{marginBottom : 20}}>30000 đ</Text>
+          <Image style={styles.image} source={{ uri: img}} />
+          <Text style={styles.name}>{name}</Text>
+          <Text style={{marginBottom : 20}}>{price} đ</Text>
         </View>
         <View style={styles.container}>
-            <Text>* Địa chỉ: Ngõ 133 Nguyễn Văn Trỗi- Hà Đông - Hà Nội</Text>
+            <Text>* Địa chỉ: {address}</Text>
             <Text>* Tên cửa hàng: Shop Online VietNam</Text>
             <Text>* Giờ làm việc: 7:00 - 22:00</Text>
-            <Text style={{color: 'blue'}}>Xem chi tiết thông tin</Text>
+            <Text style={{color: 'blue'}}>{discription}</Text>
              <TouchableOpacity  style={styles.button}>
                     <Text style={styles.inputLogin}>Thêm vào giỏ hàng</Text>
                 </TouchableOpacity>   

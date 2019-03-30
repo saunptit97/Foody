@@ -41,9 +41,13 @@ export default class CartScreen extends Component {
         };
       }
     render() {
+        const { navigation } = this.props;
+        const item = navigation.getParam('item');
+        // alert(key);
         return (
             <View style={ styles.container}>
                 <ScrollView>
+                    <Text>{JSON.stringify(item)}</Text>
                 <View style= {{ width: '100%'}}>
                     <FlatList
                         data={ this.state.DiscoverMenu }

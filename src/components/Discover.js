@@ -31,10 +31,10 @@ export default class Discover extends Component {
                     data={ this.state.DiscoverMenu }
                     renderItem={ ({item}) =>
                     <View style={styles.GridViewContainer}>
-                       {/* <TouchableOpacity onPress={()=> Alert.alert('AA')}> */}
+                       <TouchableOpacity onPress={()=> this.props.navigate(this.props.routes)}>
                             <Image style={styles.image} source={item.url} />
                             <Text style={styles.GridViewTextLayout} > {item.key} </Text>
-                        {/* </TouchableOpacity>   */}
+                        </TouchableOpacity>  
                     </View> }
                     numColumns={3}
                 />       

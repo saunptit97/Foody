@@ -1,10 +1,11 @@
 import React from 'react';
 import {TouchableOpacity, Text , StyleSheet} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 export default class ButtonSearch extends React.Component{
     render(){
       return(
         <TouchableOpacity>
-            <Text style={styles.buttonBox}>Tìm kiếm</Text>
+            <Text style={styles.buttonBox}><Icon name="md-cart" color="red"  size={16} />1</Text>
         </TouchableOpacity>
       )
     }
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
     height: '68%',
     marginTop: 10,
     color: '#333',
-    borderRadius: 10,
+    borderRadius: 25,
     marginVertical: 10,
     fontSize: 16,
     paddingTop: 7,

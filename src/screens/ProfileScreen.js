@@ -5,11 +5,33 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import img from './../images/logo.jpg';
 import bg from './../images/bg.jpg';
 export default class ProfileScreen extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+        fullname: '',
+        email : '',
+        phone: '',
+        address: ''
+    }
+  }
   static navigationOptions = {
     // headerTitle instead of title
     headerTitle: 'Thông tin cá nhân',
   };
 
+  componentWillMount(){
+    var user = firebase.auth().currentUser;
+   firebase.database().ref('users/' + user.uid).once('value', (data)=>{
+    this.setState({
+      fullname: data.val().fullname,
+      email: data.val().email,
+      phone: data.val().phone,
+      address: data.val().address,
+    });
+   }).then(function(data) {
+      console.log('AA');
+    });
+  }
   render() {
   //   componentWillMount(){
   //   var config = {
@@ -22,12 +44,13 @@ export default class ProfileScreen extends React.Component {
   //   };
   //   firebase.initializeApp(config);
   // }
-    // var user = firebase.auth().currentUser;
+    var user = firebase.auth().currentUser;
+
     return (
       <View>
       <View style={styles.infor}>
          <Image source={img} style={styles.img} />
-        <Text style={{textAlign: 'center', fontWeight: 'bold'}}>Roger</Text>
+        <Text style={{textAlign: 'center', fontWeight: 'bold'}}>{this.state.fullname}</Text>
    
        
       </View>
@@ -35,15 +58,15 @@ export default class ProfileScreen extends React.Component {
         <View style = {styles.container}>
           
           <Text style={styles.title}><Icon name="ios-mail" color="#333"  size={16} iconStyle={{marginRight: 5}} />Email</Text>
-          <Text>nts1997z@gmail.com</Text>
+          <Text>{this.state.email}</Text>
         </View>
         <View style = {styles.container}>
           <Text  style={styles.title}><Icon name="ios-phone-landscape" color="#333"  size={16} />Số điện thoại</Text>
-          <Text>0977.695.448</Text>
+          <Text>{this.state.phone}</Text>
         </View>
         <View style = {styles.container}>
           <Text  style={styles.title}><Icon name="ios-person-add" color="#333"  size={16} />Địa chỉ</Text>
-          <Text>Số 10 - Ngõ 131 - Nguyễn Văn Trỗi - Hà Đông - Hà Nội</Text>
+          <Text>{this.state.address}</Text>
         </View>
          <TouchableOpacity  style={styles.button} onPress={() => this.props.navigation.navigate('Update')}>
               <Text style={styles.inputLogin}>Chỉnh sửa thông tin</Text>
