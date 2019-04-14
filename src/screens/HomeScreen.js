@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet,Button, View, Text , TouchableOpacity , TextInput,Dimensions , Image , StatusBar , ScrollView, FlatList} from 'react-native';
+import { StyleSheet,Button, View, Text , TouchableOpacity , TextInput,Dimensions , Image , StatusBar , ScrollView, FlatList, ActivityIndicator} from 'react-native';
 import ButtonSearch from '../components/ButtonSearch';
 import Search from '../components/Search';
 import BannerSlider from './../components/BannerSlider';
@@ -37,31 +37,37 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   container: {
-    flexDirection: 'row', 
-    margin: 10,
+    flex: 1, 
+    margin: 20,
     borderBottomWidth: 8,
     borderColor: '#f6f8fa'
+  },
+  view: {
+    flexDirection: 'row', 
+    marginLeft: 20,
   },
   image :{
       width: 150,
       height: 100
   },
   GridViewContainer: {
-      flex:1,
-      margin: 20,
+    flex: 1, flexDirection : "column", marginBottom: 10
+  },
+  ListViewContainer: {
+    flex: 1, flexDirection : "row", marginBottom: 10
   },
   name: {
-      fontSize: 12,
-      // fontWeight: 'bold',
-      // color: '#000',
+      fontSize: 18,
+      color: 'green',
+      marginBottom: 7
     },
   description: {
       fontSize: 10,
   },
   price: {
-    fontSize: 14,
-    color: '#000',
-    marginLeft: 5
+    fontSize: 16,
+    color: 'red',
+    // marginLeft: 5
   },
   cart: {
     borderRadius: 25,
@@ -80,20 +86,24 @@ inputLogin: {
     color: '#fff',
     fontSize: 12,
     textAlign: 'center',
-}
+},
 });
-
 
 export default class HomeScreen extends React.Component {
   
   constructor(props) {
     super(props);
-    this.dataItem = firebase.database().ref('foods').orderByKey();
+    this.dataItem = firebase.database().ref('foods');
     this.dataStore = firebase.storage();
     this.state = {
       DiscoverMenu: [],
       column: false,
-      quantity: 1
+      quantity: 1,
+      GridColumnsValue: true,
+ 
+      ButtonDefaultText: 'CHANGE TO GRIDVIEW',
+ 
+      isLoading: false
     };
   }
   static navigationOptions = ({ navigation }) => {
@@ -110,28 +120,12 @@ export default class HomeScreen extends React.Component {
     }
    
   };
-  // static navigationOptions = {
-  //   // headerTitle instead of title
-  //   headerTitle: <TextInput  style={styles.inputBox} placeholder = "Tìm kiếm món ăn, nhà hàng, địa chỉ..."/>,
-  //   // headerTitle: <Search/>,
-  //   headerRight: <TouchableOpacity  >
-  //                     <Text style={{color: "#fff"}}> <Icon name="md-cart" color="#fff"  size={35} />1</Text>
-  //                 </TouchableOpacity>,
-  //   headerMode: 'none',
-  //    headerStyle: {
-  //     backgroundColor: '#d50000',
-  //   },
-  // };
-
-
-
   componentWillMount(){
     var DiscoverMenu = [];
     var self = this;
     this.dataItem.on('value', function(snapshot) {
       snapshot.forEach((doc) => {
         DiscoverMenu.push({
-          //  key:doc.key,
            key: doc.key,
            name: doc.toJSON().name,
            discription: doc.toJSON().discription,
@@ -139,18 +133,64 @@ export default class HomeScreen extends React.Component {
            url: doc.toJSON().img
         });
         self.setState({DiscoverMenu: DiscoverMenu});
-        console.log(DiscoverMenu);
      }) 
     });
   }
+  ChangeGridValueFunction =()=> {
+        
+   
+        this.setState({
+            
+            GridColumnsValue: false       
+        })
+    
+ }
+ ChangeListView =()=> {
+      this.setState({
+          GridColumnsValue: true, 
+      })
+  
+  }
+  
+  formatprice(n, currency) {
+    return n.toFixed(0).replace(/./g, function(c, i, a) {
+      return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+    }) + " " + currency;
+  }
   listView(){
-    this.setState({
-      column: true
-    })
+   return <ActivityIndicator/>
+  }
+  renderItem = ({item}) => {
+    return(
+      <View style={ this.state.GridColumnsValue ? styles.ListViewContainer : styles.GridViewContainer}>
+          <TouchableOpacity onPress={() => this.props.navigation.push('Detail',{
+            id : (item.key)
+          })} >
+        <Image style={{width:150, height: 100}} source={{uri: item.url}}/>    
+        </TouchableOpacity> 
+        <View style={{flex: 1, justifyContent: 'center', marginLeft: 10}}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.price}>{this.formatprice(item.price, "đ")}</Text>
+          <Text style={{fontSize: 12}}>Sau nguyen | 3 ngày trước</Text>
+          <Icon name="md-cart" size={30} color="#9b0000" onPress={()=> this.props.navigation.push('Cart', {
+              item : item.key
+            })} />
+        </View>    
+      </View>
+    )
   }
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, paddingTop: 20}}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
     return (
       <View style={{ flex: 1 }}>
+    
         <StatusBar backgroundColor="#9b0000" barStyle="light-content" />
         <ScrollView>
           <BannerSlider style={{marginTop: 10, paddingTop: 10}}/>
@@ -158,31 +198,18 @@ export default class HomeScreen extends React.Component {
             navigate={this.props.navigation.navigate}
             routes= "Category"
           />
-          <TouchableOpacity onPress={()=> this.listView()}>
-            <Text>List View</Text>
-          </TouchableOpacity>
+          <View style={ styles.view}>
+          <Icon name="ios-list" color="#333"  size={30} style={{marginRight: 10}} iconStyle={{paddingLeft: 20, marginRight: 20}} onPress={this.ChangeListView}/>
+          <Icon name="ios-grid" color="#333"  size={30} iconStyle={styles.container} onPress={this.ChangeGridValueFunction}/>
+          
+          </View>
+              
           <View style={ styles.container}>
                 <FlatList
                     data={ this.state.DiscoverMenu }
-                    renderItem={ ({item}) =>
-                    <View style={styles.GridViewContainer}>
-                        <TouchableOpacity onPress={() => this.props.navigation.push('Detail',{
-                          id : (item.key)
-                        })} >
-                            <Image style={styles.image} source={{ uri: item.url }} />
-                            <Text style={styles.name} numberOfLines={1} > {item.name} </Text>
-                            <Text style={styles.price}>{item.price} đ</Text>
-                            {/* <Text  numberOfLines={1} style={styles.description} > {item.discription} </Text> */}
-                        </TouchableOpacity>  
-                        <TouchableOpacity  style={styles.button} 
-                          onPress={()=> this.props.navigation.push('Cart', {
-                           item : 23
-                          }) 
-                        }>
-                          <Text style={styles.inputLogin}>Thêm giỏ hàng</Text>
-                        </TouchableOpacity>   
-                    </View> }
-                    numColumns={2}
+                    renderItem={ this.renderItem}
+                    key = {( this.state.GridColumnsValue ) ? 'ONE COLUMN' : 'TWO COLUMN' }
+                    numColumns = { this.state.GridColumnsValue ? 1 : 2 }
                 />       
           </View>        
         </ScrollView>
