@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { View, TextInput, Image, Dimensions, StyleSheet, Text, FlatList , TouchableOpacity, Button} from 'react-native';
+import { View, TextInput,ToastAndroid, Image, Dimensions, StyleSheet, Text, FlatList , TouchableOpacity, Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import firebase from 'firebase'
+import {connect} from 'react-redux';
+import Icon from 'react-native-vector-icons/Ionicons';
 const width = Dimensions.get('window').width;
-export default class CartScreen extends Component {
+class CartScreen extends Component {
     static navigationOptions = {
         headerTitle: 'Giỏ hàng',
       };
@@ -12,63 +14,68 @@ export default class CartScreen extends Component {
         super(props);
     
         this.state = {
-          DiscoverMenu: [
-            {
-                key: 1, 
-                name: "Sườn xào chua ngọt",
-                description: "Đồng giá 30k - Just go order",
-                url: require("../images/1.png")
-            },
-            { 
-                key: 2, 
-                name: "Sườn xào chua ngọt",
-                description: "Đồng giá 30k - Just go order",
-                url: require("../images/1.png")
-            },
-            { 
-                key: 3, 
-                name: "Sườn xào chua ngọt",
-                description: "Đồng giá 30k - Just go orderĐồng giá 30k - Just go orderĐồng giá 30k - Just go order",
-                url: require("../images/1.png")
-            },
-            { 
-                key: 4, 
-                name: "Sườn xào chua ngọt",
-                description: "Đồng giá 30k - Just go order",
-                url: require("../images/1.png")
-            }
-          ]
+          DiscoverMenu: [],
+          total: 0
         };
       }
-    render() {
+    componentWillMount(){
         const { navigation } = this.props;
         const item = navigation.getParam('item');
-        // alert(key);
+        const self = this;
+        var DiscoverMenu = [];
+        var total = 0;
+        DiscoverMenu = this.props.cartItems;
+        for(var i  = 0 ; i< DiscoverMenu.length ; i++){
+            total += DiscoverMenu[i].price;
+        }
+        this.setState({
+            DiscoverMenu: DiscoverMenu,
+            total : total
+        })
+    }  
+    formatprice(n, currency) {
+        return n.toFixed(0).replace(/./g, function(c, i, a) {
+          return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+        }) + " " + currency;
+    }
+    handleRemoveItem(item){
+        ToastAndroid.show('Delete item successfully', ToastAndroid.SHORT);
+        this.props.removeItem(item);
+        this.setState({
+            total: this.state.total - item.price
+        })
+    }
+    render() {
         return (
             <View style={ styles.container}>
                 <ScrollView>
-                    <Text>{JSON.stringify(item)}</Text>
+                { this.props.cartItems.length >0 ? 
                 <View style= {{ width: '100%'}}>
                     <FlatList
-                        data={ this.state.DiscoverMenu }
+                        data={ this.props.cartItems }
                         renderItem={ ({item}) =>
                         <View style={styles.GridViewContainer}>
                             <View style={styles.image_container}>
-                                <Image style={styles.image} source={item.url} />
+                                <Image style={styles.image} source={{ uri: item.url}} />
                             </View>
                             <View style={styles.image_container} >
-                                <Text style={styles.name} onPress={() => this.props.navigation.navigate('Signup')}> {item.name} </Text>
-                                <Text style={styles.description}>Giá: 30.000 đ</Text>
+                                <Text style={styles.name}> {item.name}</Text>
+                                <Text style={styles.description}>{this.formatprice(item.price,"đ")}</Text>
                                 <Text style={styles.description}>Số lượng: 1</Text>
+                                <TouchableOpacity onPress = { () => this.handleRemoveItem(item)}>
+                                <Image source={ require("./../images/remove-cart.png") }  style={{width: 50, height: 50}}/>
+                                </TouchableOpacity>
+                              
                             </View>   
                         </View> }
                         numColumns={1}
                     />
-                    <Text style={styles.total}>Tổng tiền: 120000 đ</Text>
+                    <Text style={styles.total}>Tổng tiền: {this.formatprice(this.state.total, "đ") }</Text>
                      <TouchableOpacity style={styles.buttonCart}>
                         <Text style={styles.inputCart} onPress = {() => this.props.navigation.navigate('Checkout') }>Thanh toán</Text>
                     </TouchableOpacity>
                     </View>
+                    : <Text>Không có sản phẩm nào</Text>}
                 </ScrollView>
           </View>        
         );
@@ -133,3 +140,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     } 
 });
+const mapDispatchToProps = (dispatch) =>{
+    return {
+      removeItem:(product) => dispatch({type:'REMOVE_FROM_CART',
+      payload:product})
+    }
+  }
+  const mapStateToProps = (state) =>{
+    return {
+      cartItems : state
+    }
+  }
+  export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);

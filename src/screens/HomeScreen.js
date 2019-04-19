@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet,Button, View, Text , TouchableOpacity , TextInput,Dimensions , Image , StatusBar , ScrollView, FlatList, ActivityIndicator} from 'react-native';
+import { StyleSheet,Button, ToastAndroid,AsyncStorage, View, Text ,TouchableOpacity , TextInput,Dimensions , Image , StatusBar , ScrollView, FlatList, ActivityIndicator} from 'react-native';
 import ButtonSearch from '../components/ButtonSearch';
 import Search from '../components/Search';
 import BannerSlider from './../components/BannerSlider';
@@ -7,7 +7,8 @@ import Discover from '../components/Discover';
 import RecentPost from '../components/RecentPost';
 import firebase from 'firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import {connect} from 'react-redux';
+import { SearchBar } from 'react-native-elements';
 // import _ from 'lodash';
 const width = Dimensions.get('window').width;
 const styles = StyleSheet.create({
@@ -89,7 +90,7 @@ inputLogin: {
 },
 });
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   
   constructor(props) {
     super(props);
@@ -103,24 +104,49 @@ export default class HomeScreen extends React.Component {
  
       ButtonDefaultText: 'CHANGE TO GRIDVIEW',
  
-      isLoading: false
+      isLoading: false,
+      arrayholder : [],
+      search :""
     };
   }
+  searchFilterFunction = text => {    
+    this.setState({
+      search: text
+    })
+    const newData = this.state.arrayholder.filter(item => {      
+      const itemData = item.name.toUpperCase();
+      console.log(itemData);
+       const textData = text.toUpperCase();
+        
+       return itemData.indexOf(textData) > -1;   
+    });    
+    this.setState({ DiscoverMenu: newData });  
+  };
   static navigationOptions = ({ navigation }) => {
     const { params = {} , quantity} = navigation.state;
     return{
-      headerTitle: <TextInput  style={styles.inputBox} placeholder = "Tìm kiếm món ăn, nhà hàng, địa chỉ..."/>,
+      // headerTitle: <TextInput  style={styles.inputBox} placeholder = "Tìm kiếm món ăn, nhà hàng, địa chỉ..."  onChangeText={text => this.searchFilterFunction(text)}
+      // autoCorrect={false}  />,
       // headerRight: <TouchableOpacity  >
       //                   <Text style={{color: "#fff"}}> <Icon name="md-cart" color="#fff"  size={35} />{quantity}</Text>
       //               </TouchableOpacity>,
+      // headerMode: 'none',
+      // headerStyle: {
+      //   backgroundColor: '#d50000',
+      // },
+      // header: {
+      //   visible: false
+      //   }
       headerMode: 'none',
-      headerStyle: {
-        backgroundColor: '#d50000',
-      },
+      header: null,
+      navigationOptions: {
+          headerVisible: false,
+      }
     }
    
   };
   componentWillMount(){
+    // alert(AsyncStorage.getItem("1"));
     var DiscoverMenu = [];
     var self = this;
     this.dataItem.on('value', function(snapshot) {
@@ -132,7 +158,10 @@ export default class HomeScreen extends React.Component {
            price: doc.toJSON().price,
            url: doc.toJSON().img
         });
-        self.setState({DiscoverMenu: DiscoverMenu});
+          self.setState({
+            DiscoverMenu: DiscoverMenu,
+            arrayholder : DiscoverMenu
+          });
      }) 
     });
   }
@@ -151,7 +180,12 @@ export default class HomeScreen extends React.Component {
       })
   
   }
-  
+  addToCart = (item) => {
+    AsyncStorage.setItem("items", item);
+    
+    const retrievedItem  = AsyncStorage.getItem("items");
+    alert(retrievedItem);
+  }
   formatprice(n, currency) {
     return n.toFixed(0).replace(/./g, function(c, i, a) {
       return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
@@ -160,6 +194,10 @@ export default class HomeScreen extends React.Component {
   listView(){
    return <ActivityIndicator/>
   }
+  handleAddCart = (phone) => {
+    this.props.addItemToCart(phone);
+    ToastAndroid.show('Successfully added item to cart!', ToastAndroid.SHORT)
+}
   renderItem = ({item}) => {
     return(
       <View style={ this.state.GridColumnsValue ? styles.ListViewContainer : styles.GridViewContainer}>
@@ -172,13 +210,12 @@ export default class HomeScreen extends React.Component {
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.price}>{this.formatprice(item.price, "đ")}</Text>
           <Text style={{fontSize: 12}}>Sau nguyen | 3 ngày trước</Text>
-          <Icon name="md-cart" size={30} color="#9b0000" onPress={()=> this.props.navigation.push('Cart', {
-              item : item.key
-            })} />
+             <Icon name="md-cart" size={30} color="#9b0000" onPress= {() => this.handleAddCart(item)} />
         </View>    
       </View>
     )
   }
+  
   render() {
     if (this.state.isLoading) {
       return (
@@ -190,9 +227,28 @@ export default class HomeScreen extends React.Component {
 
     return (
       <View style={{ flex: 1 }}>
-    
+        <View style={{ flexDirection: 'row', backgroundColor:"#d50000"}}>
+          <View style={{width: '90%'}}>
+            <SearchBar        
+                inputContainerStyle={{backgroundColor: "#fff", borderRadius: 25, height: 40, margin: 0, borderColor: '#d50000', border:'none'}} 
+                inputStyle={{backgroundColor :"#fff", color: "#000"}}
+                placeholder="Tìm kiếm món ăn..."        
+                containerStyle={{ backgroundColor: '#d50000', padding: 4, marginRight:0 , border: 0, borderColor: "#d50000", borderBottomColor: 'transparent',
+                borderTopColor: 'transparent'}}    
+                  onChangeText={text => this.searchFilterFunction(text)}
+                  value= {this.state.search}
+                
+                />    
+            
+          </View>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate("Cart")}>
+          <Icon name="md-cart"  size={30} style={{marginTop: 10}} color="#fff"/>
+            { this.props.cartItems.length > 0 ? <Text style={{color:'#fff' ,marginTop: -35, marginLeft: 25, fontWeight: 'bold'}}>{this.props.cartItems.length}</Text> : null }
+          </TouchableOpacity>
+          </View>
+          
         <StatusBar backgroundColor="#9b0000" barStyle="light-content" />
-        <ScrollView>
+        <ScrollView style={{flex: 1}}>
           <BannerSlider style={{marginTop: 10, paddingTop: 10}}/>
           <Discover 
             navigate={this.props.navigation.navigate}
@@ -201,10 +257,9 @@ export default class HomeScreen extends React.Component {
           <View style={ styles.view}>
           <Icon name="ios-list" color="#333"  size={30} style={{marginRight: 10}} iconStyle={{paddingLeft: 20, marginRight: 20}} onPress={this.ChangeListView}/>
           <Icon name="ios-grid" color="#333"  size={30} iconStyle={styles.container} onPress={this.ChangeGridValueFunction}/>
-          
+        
           </View>
-              
-          <View style={ styles.container}>
+         <View style={ styles.container}>
                 <FlatList
                     data={ this.state.DiscoverMenu }
                     renderItem={ this.renderItem}
@@ -218,3 +273,15 @@ export default class HomeScreen extends React.Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    addItemToCart:(product) => dispatch({type:'ADD_TO_CART',
+    payload:product})
+  }
+}
+const mapStateToProps = (state) =>{
+  return {
+    cartItems : state
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

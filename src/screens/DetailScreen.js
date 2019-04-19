@@ -17,12 +17,6 @@ export default class DetailScreen extends React.Component {
       const { navigation } = this.props;
       const id = navigation.getParam('id');
       const self = this;
-      var storageRef = firebase.storage().ref();
-      var imagesRef = storageRef.child('images');
-      var filename = 'GaDapDat.jpg';
-      var spaceRef = imagesRef.child(filename);
-      var path = spaceRef.fullPath;
-      console.log(spaceRef.getDownloadURL());
       firebase.database().ref("foods/" + id).once('value', function(data){
         self.setState({
           name: data.val().name,
@@ -33,10 +27,6 @@ export default class DetailScreen extends React.Component {
         });
         filename = data.val().img
       });
-     
-     
-      
-      
     }
     render() {
       let {name, price, address, discription, img} = this.state;

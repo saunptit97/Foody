@@ -17,7 +17,10 @@
     "react-native-setting-list": "^2.0.1",
     "react-native-settings-list": "^1.8.0",
     "react-native-vector-icons": "^6.4.1",
-    "react-navigation": "^3.4.1"
+    "react-navigation": "^3.4.1",
+    "react-redux": "^7.0.2",
+    "redux": "^4.0.1",
+    "tcomb-form-native": "^0.6.20"
   },
   "devDependencies": {
     "@babel/core": "7.3.4",

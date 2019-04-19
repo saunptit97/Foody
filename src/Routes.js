@@ -18,6 +18,7 @@ import InvoiceScreen from './screens/InvoiceScreen';
 import UpdateProfileScreen from './screens/UpdateProfileScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import FoodScreen from './screens/FoodScreen';
+import {connect} from 'react-redux';
 const headerOpt = {
   headerStyle: {
     backgroundColor: '#d50000',
@@ -35,12 +36,15 @@ const HomeStack = createStackNavigator(
     Home: HomeScreen,
     Detail: DetailScreen,
     Category: CategoryScreen,
+    Cart: CartScreen,
+    Checkout: CheckoutScreen,
+    Success: SuccessScreen
   },
   {
     initialRouteName: 'Home',
-    defaultNavigationOptions: {
-        ...headerOpt
-    },
+    // defaultNavigationOptions: {
+    //     ...headerOpt
+    // },
   }
 );
 
@@ -76,8 +80,16 @@ const CartStack = createStackNavigator(
   }
 )
 class IconWithBadge extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      qty: 1
+    }
+  }
+
   render() {
-    const { name, badgeCount, color, size } = this.props;
+    const { name, color, size, badgeCount } = this.props;
+   
     return (
       <View style={{ width: 24, height: 24, margin: 5 }}>
         <Ionicons name={name} size={size} color={color} />
@@ -104,14 +116,15 @@ class IconWithBadge extends React.Component {
   }
 }
 
-const HomeIconWithBadge = props => {
+const HomeIconWithBadge = (props) => {
+  // console.log("Props CartItems: " + props.cartItems.length);
   // You should pass down the badgeCount in some other ways like context, redux, mobx or event emitters.
-  return <IconWithBadge {...props} badgeCount={3} />;
+  return <IconWithBadge {...props} badgeCount={3}/>;
 };
 const TabNavigator = createBottomTabNavigator(
 {
     Home: HomeStack,
-    Cart: CartStack,
+    // Cart: CartStack,
     Settings: SettingsStack,
     },
     {
@@ -120,6 +133,7 @@ const TabNavigator = createBottomTabNavigator(
         const { routeName } = navigation.state;
         let IconComponent = Ionicons;
         let iconName;
+      
         if (routeName === 'Home') {
             iconName = `ios-home${focused ? '' : ''}`;
             
@@ -144,4 +158,13 @@ const TabNavigator = createBottomTabNavigator(
     },
     }
 );
- export default createAppContainer(TabNavigator);
+
+const mapStateToProps = (state) => {
+  
+  console.log("AAA"+ state);
+  return {
+    cartItems: state
+  }
+}
+
+ export default connect(mapStateToProps)(TabNavigator);
