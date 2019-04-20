@@ -139,7 +139,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Button , TouchableOpacity, Text} from 'react-native';
 import t from 'tcomb-form-native';
-
+import stringsolanguages from './../languages/stringsolanguages'
 const Form = t.form.Form;
 const User = t.struct({
   firstname: t.String,
@@ -212,10 +212,10 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <Form ref={c => (this._form = c)} type={User} options={options} />
-        <Button title="Sign Up!" onPress={this.handleSubmit} />
+       
         
                  <TouchableOpacity style={styles.buttonCart} onPress = {() => this.handleSubmit() }>
-                     <Text style={styles.inputCart} >Thanh toán</Text>
+                     <Text style={styles.inputCart} >{stringsolanguages.checkout}</Text>
                  </TouchableOpacity>
       </View>
     );

@@ -9,6 +9,7 @@ import firebase from 'firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import { SearchBar } from 'react-native-elements';
+import stringsolanguages from './../languages/stringsolanguages';
 // import _ from 'lodash';
 const width = Dimensions.get('window').width;
 const styles = StyleSheet.create({
@@ -146,7 +147,9 @@ class HomeScreen extends React.Component {
    
   };
   componentWillMount(){
+    // alert(this.props.language);
     // alert(AsyncStorage.getItem("1"));
+    stringsolanguages.setLanguage(this.props.language);
     var DiscoverMenu = [];
     var self = this;
     this.dataItem.on('value', function(snapshot) {
@@ -217,6 +220,8 @@ class HomeScreen extends React.Component {
   }
   
   render() {
+    // alert(this.props.language);
+    stringsolanguages.setLanguage(this.props.language);
     if (this.state.isLoading) {
       return (
         <View style={{flex: 1, paddingTop: 20}}>
@@ -232,7 +237,7 @@ class HomeScreen extends React.Component {
             <SearchBar        
                 inputContainerStyle={{backgroundColor: "#fff", borderRadius: 25, height: 40, margin: 0, borderColor: '#d50000', border:'none'}} 
                 inputStyle={{backgroundColor :"#fff", color: "#000"}}
-                placeholder="Tìm kiếm món ăn..."        
+                placeholder= {stringsolanguages.search}        
                 containerStyle={{ backgroundColor: '#d50000', padding: 4, marginRight:0 , border: 0, borderColor: "#d50000", borderBottomColor: 'transparent',
                 borderTopColor: 'transparent'}}    
                   onChangeText={text => this.searchFilterFunction(text)}
@@ -280,8 +285,9 @@ const mapDispatchToProps = (dispatch) =>{
   }
 }
 const mapStateToProps = (state) =>{
+  const {cartItems, language} = state;
   return {
-    cartItems : state
+    cartItems, language
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

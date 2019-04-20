@@ -12,12 +12,17 @@ import {
 
 import { List, ListItem } from 'react-native-elements';
 import SettingsList from 'react-native-settings-list';
-export default class SettingScreen extends React.Component {
+import stringsoflanguages from './../languages/stringsolanguages';
+import {connect} from 'react-redux';
+class SettingScreen extends React.Component {
   static navigationOptions = {
-    headerTitle: 'Cài đặt',
+    headerTitle: `${stringsoflanguages.setting}`,
   };
-
+  // componentWillMount(){
+  //   stringsoflanguages.setLanguage("");
+  // }
   render() {
+    stringsoflanguages.setLanguage(this.props.language);
     return (
       <View style={{ flex: 1, backgroundColor: '#f1eaea'}}>
           <SettingsList>
@@ -25,33 +30,33 @@ export default class SettingScreen extends React.Component {
               backgroundColor='#000000'
               titleStyle={{color:'#fff', fontSize: 18}}
               icon={<Image style={styles.imageStyle} source={require('./../images/user.png')}/>}
-              title='Thông tin'
+              title={stringsoflanguages.infor}
               onPress={() => this.props.navigation.navigate('Profile')}
             />
             <SettingsList.Header headerStyle={{marginTop:5}}/>
             <SettingsList.Item
               icon={<Image style={styles.imageStyle} source={require('./../images/history.png')}/>}
-              title='Lịch sử'
+              title={stringsoflanguages.history}
               onPress={() => this.props.navigation.navigate('History')}
             />
             <SettingsList.Item
               icon={<Image style={styles.imageStyle} source={require('./../images/invoice.png')}/>}
-              title='Hóa đơn'
+              title={stringsoflanguages.order}
               onPress={() => this.props.navigation.navigate('Invoice')}
             />
             <SettingsList.Item
               icon={<Image style={styles.imageStyle} source={require('./../images/policy.png')}/>}
-              title='Chính sách'
+              title={stringsoflanguages.policy}
               onPress={() => this.props.navigation.navigate('Policy')}
             />
              <SettingsList.Item
               icon={<Image style={styles.imageStyle} source={require('./../images/setting.png')}/>}
-              title='Cài đặt ứng dụng'
+              title= {stringsoflanguages.setting}
               onPress={() => this.props.navigation.navigate('Config')}
             />
            
           </SettingsList>
-          <Text style={styles.version}>Version 0.0.1</Text>
+          <Text style={styles.version}>{stringsoflanguages.version} 0.0.1</Text>
       </View>
     );
   }
@@ -70,3 +75,11 @@ const styles = StyleSheet.create({
     marginBottom: 20
   }
 });
+const mapStateToProps = (state) =>{
+  const {cartItems, language} = state;
+  return {
+    cartItems, language
+  }
+}
+
+export default connect(mapStateToProps)(SettingScreen)

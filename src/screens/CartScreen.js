@@ -5,10 +5,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'firebase'
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
+import stringsolanguages from './../languages/stringsolanguages';
 const width = Dimensions.get('window').width;
 class CartScreen extends Component {
     static navigationOptions = {
-        headerTitle: 'Giỏ hàng',
+        headerTitle: `${stringsolanguages.cart}`,
       };
     constructor(props) {
         super(props);
@@ -70,9 +71,9 @@ class CartScreen extends Component {
                         </View> }
                         numColumns={1}
                     />
-                    <Text style={styles.total}>Tổng tiền: {this.formatprice(this.state.total, "đ") }</Text>
+                    <Text style={styles.total}>{stringsolanguages.total}: {this.formatprice(this.state.total, "đ") }</Text>
                      <TouchableOpacity style={styles.buttonCart}>
-                        <Text style={styles.inputCart} onPress = {() => this.props.navigation.navigate('Checkout') }>Thanh toán</Text>
+                        <Text style={styles.inputCart} onPress = {() => this.props.navigation.navigate('Checkout') }>{stringsolanguages.checkout}</Text>
                     </TouchableOpacity>
                     </View>
                     : <Text>Không có sản phẩm nào</Text>}
@@ -147,8 +148,9 @@ const mapDispatchToProps = (dispatch) =>{
     }
   }
   const mapStateToProps = (state) =>{
+    const {cartItems}  = state;
     return {
-      cartItems : state
+      cartItems
     }
   }
   export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);

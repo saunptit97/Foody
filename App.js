@@ -79,8 +79,11 @@ import React from 'react';
 import AppStack from './src/App';
 import {Provider} from 'react-redux';
 import store from './stores/index';
-export default class App extends React.Component{
+// import {connect} from 'react-redux';
+import stringsolanguages from './src/languages/stringsolanguages';
+class App extends React.Component{
   render(){
+    // stringsolanguages.setLanguage('en');
     return (
       <Provider store = {store}>
         <AppStack/>
@@ -88,3 +91,5 @@ export default class App extends React.Component{
     )
   }
 }
+
+export default App;

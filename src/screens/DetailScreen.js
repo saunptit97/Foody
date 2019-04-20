@@ -1,5 +1,6 @@
 import React from 'react';
 import {TouchableOpacity,View, Text, Button, Image, StyleSheet} from 'react-native';
+import stringsoflanguages from './../languages/stringsolanguages';
 import firebase from 'firebase';
 const url = "./../images/1.png";
 export default class DetailScreen extends React.Component {
@@ -43,7 +44,7 @@ export default class DetailScreen extends React.Component {
             <Text>* Giờ làm việc: 7:00 - 22:00</Text>
             <Text style={{color: 'blue'}}>{discription}</Text>
              <TouchableOpacity  style={styles.button}>
-                    <Text style={styles.inputLogin}>Thêm vào giỏ hàng</Text>
+                    <Text style={styles.inputLogin}>{stringsoflanguages.addtocart}</Text>
                 </TouchableOpacity>   
         </View>
         </View>

@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import img from './../images/logo.jpg';
 import bg from './../images/bg.jpg';
-
+import stringsoflanguages from './../languages/stringsolanguages';
 export default class UpdateProfileScreen extends React.Component {
  
   constructor(props){
@@ -66,7 +66,7 @@ export default class UpdateProfileScreen extends React.Component {
       </View>
      <View style={{ margin: 5}}>
         <View style = {styles.container}>
-          <Text style={styles.title}><Icon name="ios-person" color="#333"  size={16} iconStyle={{marginRight: 5}} />Tên hiển thị</Text>
+          <Text style={styles.title}><Icon name="ios-person" color="#333"  size={16} iconStyle={{marginRight: 5}} />{stringsoflanguages.fullname}</Text>
           <TextInput style={styles.input} 
              onChangeText={ (fullname) => this.setState({fullname})}
              value = {this.state.fullname}
@@ -81,21 +81,21 @@ export default class UpdateProfileScreen extends React.Component {
           />
         </View>
         <View style = {styles.container}>
-          <Text  style={styles.title}><Icon name="ios-phone-landscape" color="#333"  size={16} />Số điện thoại</Text>
+          <Text  style={styles.title}><Icon name="ios-phone-landscape" color="#333"  size={16} />{stringsoflanguages.phone}</Text>
           <TextInput style={styles.input} 
            onChangeText={ (phone) => this.setState({phone})}
            value = {this.state.phone}
           />
         </View>
         <View style = {styles.container}>
-          <Text  style={styles.title}><Icon name="ios-person-add" color="#333"  size={16} />Địa chỉ</Text>
+          <Text  style={styles.title}><Icon name="ios-person-add" color="#333"  size={16} />{stringsoflanguages.address}</Text>
           <TextInput style={styles.input} 
            onChangeText={ (address) => this.setState({address})}
            value = {this.state.address}
           />
         </View>
          <TouchableOpacity  style={styles.button}  onPress={this.handleUpdate}>
-              <Text style={styles.inputLogin}>Cập nhật</Text>
+              <Text style={styles.inputLogin}>{stringsoflanguages.update}</Text>
           </TouchableOpacity> 
           </View>
       </View>

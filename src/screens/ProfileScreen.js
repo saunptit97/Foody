@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import img from './../images/logo.jpg';
 import bg from './../images/bg.jpg';
+import stringsoflanguages from './../languages/stringsolanguages';
 export default class ProfileScreen extends React.Component {
   constructor(props){
     super(props);
@@ -61,15 +62,15 @@ export default class ProfileScreen extends React.Component {
           <Text>{this.state.email}</Text>
         </View>
         <View style = {styles.container}>
-          <Text  style={styles.title}><Icon name="ios-phone-landscape" color="#333"  size={16} />Số điện thoại</Text>
+          <Text  style={styles.title}><Icon name="ios-phone-landscape" color="#333"  size={16} />{stringsoflanguages.phone}</Text>
           <Text>{this.state.phone}</Text>
         </View>
         <View style = {styles.container}>
-          <Text  style={styles.title}><Icon name="ios-person-add" color="#333"  size={16} />Địa chỉ</Text>
+          <Text  style={styles.title}><Icon name="ios-person-add" color="#333"  size={16} />{stringsoflanguages.address}</Text>
           <Text>{this.state.address}</Text>
         </View>
          <TouchableOpacity  style={styles.button} onPress={() => this.props.navigation.navigate('Update')}>
-              <Text style={styles.inputLogin}>Chỉnh sửa thông tin</Text>
+              <Text style={styles.inputLogin}>{stringsoflanguages.update_infor}</Text>
           </TouchableOpacity> 
           </View>
       </View>

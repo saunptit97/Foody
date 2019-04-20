@@ -15,16 +15,31 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { List, ListItem } from 'react-native-elements';
 import SettingsList from 'react-native-settings-list';
-export default class SettingScreen extends React.Component {
+import stringsoflanguages from './../languages/stringsolanguages';
+import {connect} from 'react-redux';
+class ConfigScreen extends React.Component {
   static navigationOptions = {
-    headerTitle: 'Cài đặt ứng dụng',
+    headerTitle: `${stringsoflanguages.config}`,
   };
   state = {
     modalVisible: false,
-    language: 'en'
+    language: ''
   };
+  componentWillMount(){
+    this.setState({
+      language: `${this.props.language}`
+    })
+  }
   setModalVisible(visible) {
+    // stringsoflanguages.setLanguage("hi");
     this.setState({modalVisible: visible});
+  }
+  handleChangeLanguage(){
+    var language = this.state.language;
+    this.props.changelanguage(language);
+    // this.props.navigation.navigate('Home', {
+    //   onBack: () => this.refresh()//function to refresh screen,
+    // });
   }
   render() {
     return (
@@ -35,22 +50,22 @@ export default class SettingScreen extends React.Component {
             <SettingsList.Item
               icon={ <Icon name="md-locate" color="#333"  size={30} style={{marginLeft: 10, marginTop: 10}} iconStyle={{paddingLeft: 20, marginRight: 20}} />
              }
-              title='Chọn Tỉnh/Thành phố'
+              title={stringsoflanguages.change_address}
               onPress={() => this.props.navigation.navigate('Address')}
             />
             <SettingsList.Item
               icon={<Icon name="md-flag" color="#333"  size={30} style={{marginLeft: 10, marginTop: 10}} iconStyle={{paddingLeft: 20, marginRight: 20}} />}
-              title='Đổi ngôn ngữ'
+              title= {stringsoflanguages.language}
               onPress={() => {
                 this.setModalVisible(true);
               }}
             />
             <SettingsList.Item
                 icon={<Icon name="ios-mail" color="#333"  size={30} style={{marginLeft: 10 , marginTop: 10}} iconStyle={{paddingLeft: 20, marginRight: 20}} />}
-                title='Liên hệ'
+                title={stringsoflanguages.contact}
                 onPress={() => this.props.navigation.navigate('Contact')}
               />
-           
+    
           </SettingsList>
          
           <Modal
@@ -78,7 +93,7 @@ export default class SettingScreen extends React.Component {
                     }}>
                       <Button raised icon={{name : 'close'}}
                         
-                        title="Đóng"
+                        title={stringsoflanguages.close}
                         backgroundColor = "red"
                         onPress={() => {
                           this.setModalVisible(!this.state.modalVisible);
@@ -86,23 +101,32 @@ export default class SettingScreen extends React.Component {
                />
                     </View>
                         <View style={{padding: 20}}>
-                        <Text>Chọn ngôn ngữ</Text>
+                        <Text>{stringsoflanguages.settinglanguage}</Text>
               <Picker
                   selectedValue={this.state.language}
                   style={{height: 50, width: '100%'}}
                   onValueChange={(itemValue, itemIndex) =>
                     this.setState({language: itemValue})
                   }>
-                  <Picker.Item label="Tiếng Việt" value="vi" />
-                  <Picker.Item label="English" value="en" />
+                  <Picker.Item label={stringsoflanguages.vietnamese} value="vi" />
+                  <Picker.Item label={stringsoflanguages.english} value="en" />
                 </Picker>
+                        
+                <Button raised icon={{name : 'close'}}
+                        
+                        title={stringsoflanguages.change}
+                        backgroundColor = "red"
+                        onPress={() => {
+                          this.handleChangeLanguage()
+                        }}
+               />
                         </View>
                     
               
             </View>
           </View>
         </Modal>
-          <Text style={styles.version}>Version 0.0.1</Text>
+          <Text style={styles.version}>{stringsoflanguages.version} 0.0.1</Text>
       </View>
     );
   }
@@ -121,3 +145,17 @@ const styles = StyleSheet.create({
     marginBottom: 20
   }
 });
+
+const mapStateToProps = (state) =>{
+  const {cartItems, language} = state;
+  return {
+    cartItems, language
+  }
+}
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    changelanguage:(text) => dispatch({type:'CHANGE_LANGUAGE',
+    text:text})
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ConfigScreen)
