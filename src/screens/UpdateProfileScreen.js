@@ -53,10 +53,6 @@ export default class UpdateProfileScreen extends React.Component {
     });
   }
   render() {
-    // var {fullname, email, phone,address} = this.state;
-    // var user = firebase.auth().currentUser;
-    // alert(user.uid);
-   
     return (
       <ScrollView>
 <View style={{margin: 5}}>

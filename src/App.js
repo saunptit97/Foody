@@ -3,6 +3,7 @@ import {createSwitchNavigator, createStackNavigator, createAppContainer ,createB
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import Routes from './Routes';
+
 const AppStack = createSwitchNavigator({
   Login: LoginScreen,
   Signup: SignupScreen,

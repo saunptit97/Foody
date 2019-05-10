@@ -17,7 +17,7 @@ export default class ProfileScreen extends React.Component {
   }
   static navigationOptions = {
     // headerTitle instead of title
-    headerTitle: 'Thông tin cá nhân',
+    headerTitle: `${stringsoflanguages.update_infor}`,
   };
 
   componentWillMount(){

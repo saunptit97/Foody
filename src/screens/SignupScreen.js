@@ -26,10 +26,13 @@ export default class SignupScreen extends Component{
             <KeyboardAvoidingView style={styles.container}>
                
                 <Logo />
-                <FormSignup type="Đăng ký"/> 
+                <FormSignup type="Đăng ký"
+                    navigate={this.props.navigation.navigate}
+                    destination = "Login"
+                /> 
                 <View style={styles.signupText}> 
                     <Text style={{color: '#fff'}}>Bạn chưa có tài khoản?</Text>    
-                    <Text style={styles.signup}  onPress={() => this.props.navigation.navigate('Signup')}>Đăng nhập</Text>
+                    <Text style={styles.signup}  onPress={() => this.props.navigation.navigate('Login')}>Đăng nhập</Text>
                 </View>                  
     
             </KeyboardAvoidingView>

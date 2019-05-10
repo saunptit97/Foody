@@ -27,7 +27,8 @@ const strings = new LocalizedStrings({
     cart: "Giỏ hàng",
     messaddtocart: "Thêm sản phẩm vào giỏ hàng thành công",
     total: "Tổng tiền",
-    checkout: "Thanh toán"
+    checkout: "Thanh toán",
+    logout: "Đăng xuất"
   },
   "en":{
     search: "Search for cuisine...",
@@ -56,7 +57,8 @@ const strings = new LocalizedStrings({
     cart: "Cart",
     messaddtocart: "Add this product to cart successfully",
     total: "Total",
-    checkout: "Checkout"
+    checkout: "Checkout",
+    logout: "Logout"
   }
 });
 export default strings;

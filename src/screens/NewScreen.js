@@ -92,11 +92,11 @@ inputLogin: {
 },
 });
 
-class DrinkScreen extends React.Component {
+class NewScreen extends React.Component {
   
   constructor(props) {
     super(props);
-    this.dataItem = firebase.database().ref('foods');
+    this.dataItem = firebase.database().ref('foods').limitToLast(10);
     this.dataStore = firebase.storage();
     this.state = {
       DiscoverMenu: [],
@@ -141,7 +141,7 @@ class DrinkScreen extends React.Component {
     this.dataItem.on('value', function(snapshot) {
       snapshot.forEach((doc) => {
         var price = currency == 'vnd' ? doc.toJSON().price : doc.toJSON().price_usd;
-        if(doc.toJSON().id_cat == "002"){
+       
           DiscoverMenu.push({
             key: doc.key,
             name: doc.toJSON().name,
@@ -149,7 +149,7 @@ class DrinkScreen extends React.Component {
             price: price,
             img: doc.toJSON().img
          });
-        }
+        
           self.setState({
             DiscoverMenu: DiscoverMenu,
             arrayholder : DiscoverMenu,
@@ -245,4 +245,4 @@ const mapStateToProps = (state) =>{
     cartItems, language, currency
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(DrinkScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(NewScreen);

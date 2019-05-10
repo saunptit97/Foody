@@ -81,7 +81,19 @@ import {Provider} from 'react-redux';
 import store from './stores/index';
 // import {connect} from 'react-redux';
 import stringsolanguages from './src/languages/stringsolanguages';
+import firebase from 'firebase';
 class App extends React.Component{
+  componentWillMount(){
+    var config = {
+      apiKey: "AIzaSyDuiS7bYSd_HIIx8fi2WKdUibJpw5CI42M",
+      authDomain: "food-c4614.firebaseapp.com",
+      databaseURL: "https://food-c4614.firebaseio.com",
+      projectId: "food-c4614",
+      storageBucket: "food-c4614.appspot.com",
+      messagingSenderId: "752684496596"
+    };
+    firebase.initializeApp(config);
+  }
   render(){
     // stringsolanguages.setLanguage('en');
     return (

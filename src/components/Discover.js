@@ -14,7 +14,7 @@ export default class Discover extends Component {
                 url: require("../images/food.png")
             },
             { 
-                key: "Đặt chỗ", 
+                key: "Đồ uống", 
                 url: require("../images/restaurant.png")
             },
             {
@@ -32,6 +32,7 @@ export default class Discover extends Component {
                     renderItem={ ({item}) =>
                     <View style={styles.GridViewContainer}>
                        <TouchableOpacity onPress={()=> this.props.navigate(this.props.routes)}>
+                       {/* <TouchableOpacity> */}
                             <Image style={styles.image} source={item.url} />
                             <Text style={styles.GridViewTextLayout} > {item.key} </Text>
                         </TouchableOpacity>  

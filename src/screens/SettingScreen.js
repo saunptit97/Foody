@@ -14,15 +14,24 @@ import { List, ListItem } from 'react-native-elements';
 import SettingsList from 'react-native-settings-list';
 import stringsoflanguages from './../languages/stringsolanguages';
 import {connect} from 'react-redux';
+import firebase from 'firebase';
 class SettingScreen extends React.Component {
-  static navigationOptions = {
-    headerTitle: `${stringsoflanguages.setting}`,
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: `${stringsoflanguages.setting}`,
+    };
   };
   // componentWillMount(){
+    
   //   stringsoflanguages.setLanguage("");
   // }
+  handleLogout(){
+    firebase.auth().signOut();
+    this.props.navigation.navigate('Login');
+  }
   render() {
     stringsoflanguages.setLanguage(this.props.language);
+    // this.props.navigation.setParams('name', stringsoflanguages.setting);
     return (
       <View style={{ flex: 1, backgroundColor: '#f1eaea'}}>
           <SettingsList>
@@ -40,9 +49,9 @@ class SettingScreen extends React.Component {
               onPress={() => this.props.navigation.navigate('History')}
             />
             <SettingsList.Item
-              icon={<Image style={styles.imageStyle} source={require('./../images/invoice.png')}/>}
-              title={stringsoflanguages.order}
-              onPress={() => this.props.navigation.navigate('Invoice')}
+              icon={<Image style={styles.imageStyle} source={require('./../images/history.png')}/>}
+              title="Điểm tích lũy"
+              onPress={() => this.props.navigation.navigate('Point')}
             />
             <SettingsList.Item
               icon={<Image style={styles.imageStyle} source={require('./../images/policy.png')}/>}
@@ -54,8 +63,13 @@ class SettingScreen extends React.Component {
               title= {stringsoflanguages.setting}
               onPress={() => this.props.navigation.navigate('Config')}
             />
-           
+            <SettingsList.Item
+              icon={<Image style={styles.imageStyle} source={require('./../images/logout.png')}/>}
+              title= {stringsoflanguages.logout}
+              onPress={() => this.handleLogout()}
+            />
           </SettingsList>
+         
           <Text style={styles.version}>{stringsoflanguages.version} 0.0.1</Text>
       </View>
     );

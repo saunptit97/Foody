@@ -6,7 +6,12 @@ import firebase from 'firebase'
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import stringsolanguages from './../languages/stringsolanguages';
+import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import { CheckBox } from 'react-native-elements'
 const width = Dimensions.get('window').width;
+var radio_props = [
+    {label: 'Sử dụng point', value: 1 }
+  ];
 class CartScreen extends Component {
     static navigationOptions = {
         headerTitle: `${stringsolanguages.cart}`,
@@ -16,7 +21,12 @@ class CartScreen extends Component {
     
         this.state = {
           DiscoverMenu: [],
-          total: 0
+          total: 0,
+          coupon: "XZA12Z2", 
+          discount: 0, 
+          discountPoint:0,
+          point: 0,
+          statusPoint: false,
         };
       }
     componentWillMount(){
@@ -33,6 +43,12 @@ class CartScreen extends Component {
             DiscoverMenu: DiscoverMenu,
             total : total
         })
+        var user = firebase.auth().currentUser;
+        firebase.database().ref('users/' + user.uid).once('value', (data)=>{
+          this.setState({
+            point: data.val().point
+          })
+        });
     }  
     formatprice(n, currency) {
         return n.toFixed(0).replace(/./g, function(c, i, a) {
@@ -46,6 +62,41 @@ class CartScreen extends Component {
             total: this.state.total - item.price
         })
     }
+    handleCouponCode(){
+        var coupon = this.state.coupon;
+        if(coupon != ""){
+            firebase.database().ref("coupon/" + coupon).once('value',(data)=> {
+                if(data.val()){
+                    if(data.val().status == 0){
+                        ToastAndroid.show('Mã giảm giá đã được sử dụng', ToastAndroid.SHORT);
+                    }else{
+                        ToastAndroid.show('Bạn sử dụng mã giảm giá thành công', ToastAndroid.SHORT);
+                        this.setState({
+                            coupon: "",
+                            discount: this.state.discount + data.val().discount,
+                            total: this.state.total > this.state.discount + data.val().discount ? this.state.total - this.state.discount - data.val().discount: 0
+                        })
+                    }
+                }else{
+                    ToastAndroid.show('Nhập mã không hợp lệ hãy thử lại', ToastAndroid.SHORT);
+                }
+            });
+        }else{
+            ToastAndroid.show('Vui lòng nhập mã giảm giá', ToastAndroid.SHORT);
+        }
+    }
+    handlePoint(){
+        this.setState({
+            statusPoint: !this.state.statusPoint,
+        })
+       
+        this.setState({
+            // disconut: this.state.discount + this.state.point,
+            total: this.state.total > this.state.point? this.state.total - this.state.point : 0,
+            point: 0
+        })
+       
+    }
     render() {
         return (
             <View style={ styles.container}>
@@ -57,7 +108,7 @@ class CartScreen extends Component {
                         renderItem={ ({item}) =>
                         <View style={styles.GridViewContainer}>
                             <View style={styles.image_container}>
-                                <Image style={styles.image} source={{ uri: item.url}} />
+                                <Image style={styles.image} source={{ uri: (item.img)}} />
                             </View>
                             <View style={styles.image_container} >
                                 <Text style={styles.name}> {item.name}</Text>
@@ -71,9 +122,31 @@ class CartScreen extends Component {
                         </View> }
                         numColumns={1}
                     />
+                    <View style={{ flexDirection: "row", flex: 1}}>
+                        <TextInput 
+                        style = {{backgroundColor: '#f5f5f5', margin: 5, width: 200, height: 50, paddingLeft: 10, paddingRight: 10, color: '#202020'}}  
+                        placeholder="Mã giảm giá" 
+                        onChangeText = {(coupon) => this.setState({coupon})}
+                        value= {this.state.coupon}
+                        />
+                        <TouchableOpacity style={{ backgroundColor: '#1979c3',paddingVertical: 12, marginVertical: 10}} onPress={() => this.handleCouponCode()}>
+                            <Text style={{color:"#fff", paddingHorizontal: 20}}>Áp dụng</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <CheckBox
+                        title='Sử dụng point'
+                        checked={this.state.statusPoint}
+                        onPress={() => this.handlePoint()}
+                        />
+                    { this.state.discount > 0 ? <Text style={styles.total}>Giảm giá: {this.formatprice(this.state.discount, "đ") }</Text > :<Text style={styles.total}></Text>}
                     <Text style={styles.total}>{stringsolanguages.total}: {this.formatprice(this.state.total, "đ") }</Text>
                      <TouchableOpacity style={styles.buttonCart}>
-                        <Text style={styles.inputCart} onPress = {() => this.props.navigation.navigate('Checkout') }>{stringsolanguages.checkout}</Text>
+                        <Text style={styles.inputCart} onPress = {() => this.props.navigation.push('Checkout',{
+                           total : (this.state.total),
+                           coupon : (this.state.coupon),
+                           point: (this.state.point), 
+                           statusPoint: (this.state.statusPoint)
+                        }) }>{stringsolanguages.checkout}</Text>
                     </TouchableOpacity>
                     </View>
                     : <Text>Không có sản phẩm nào</Text>}
@@ -126,7 +199,7 @@ const styles = StyleSheet.create({
          // marginLeft: 5
      },
      total: {
-         margin: 20
+         marginTop: 5
      },
      buttonCart: {
         // width: 300, 
@@ -144,7 +217,8 @@ const styles = StyleSheet.create({
 const mapDispatchToProps = (dispatch) =>{
     return {
       removeItem:(product) => dispatch({type:'REMOVE_FROM_CART',
-      payload:product})
+      payload:product}),
+      removeItems: () => dispatch({type:'REMOVE_ALL'})
     }
   }
   const mapStateToProps = (state) =>{
