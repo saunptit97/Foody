@@ -33,9 +33,15 @@ export default class HistoryScreen extends React.Component {
   renderItem = ({item}) => {
     return(
      <View style={{ padding: 20, backgroundColor: "#f8f8f8", margin: 10}}>
+      <TouchableOpacity onPress={() => this.props.navigation.push("DetailOrder",{
+        id: (item.id),
+        total: (item.total),
+        status: (item.status)
+      })}>
        <Text>Mã hóa đơn: {item.id}</Text>
        <Text>Tổng tiền: {item.total}</Text>
        <Text>Tình trạng: {item.status ==0 ? "Đang xử lý" : "Đã hoàn thành"}</Text>
+       </TouchableOpacity>
      </View>
     )
   }

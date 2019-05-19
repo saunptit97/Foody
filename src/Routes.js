@@ -19,6 +19,7 @@ import UpdateProfileScreen from './screens/UpdateProfileScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import FoodScreen from './screens/FoodScreen';
 import PointScreen from './screens/PointScreen';
+import DetailOrder from './screens/DetailOrder';
 import {connect} from 'react-redux';
 const headerOpt = {
   headerStyle: {
@@ -39,7 +40,7 @@ const HomeStack = createStackNavigator(
     Cart: CartScreen,
     Checkout: CheckoutScreen,
     Success: SuccessScreen, 
-   
+
   },
   {
     initialRouteName: 'Home',
@@ -59,7 +60,8 @@ const SettingsStack = createStackNavigator(
     Invoice: InvoiceScreen,
     Update: UpdateProfileScreen,
     Logout: LoginScreen, 
-    Point: PointScreen
+    Point: PointScreen,
+    DetailOrder: DetailOrder
   },
   {
     defaultNavigationOptions: {

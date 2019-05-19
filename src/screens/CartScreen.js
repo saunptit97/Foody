@@ -93,7 +93,7 @@ class CartScreen extends Component {
         this.setState({
             // disconut: this.state.discount + this.state.point,
             total: this.state.total > this.state.point? this.state.total - this.state.point : 0,
-            point: 0
+            point: this.state.total > this.state.point ? 0 : this.state.total
         })
        
     }

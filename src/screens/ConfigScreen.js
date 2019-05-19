@@ -50,6 +50,10 @@ class ConfigScreen extends React.Component {
     var currency = this.state.currency;
     this.props.changecurrency(currency);
     ToastAndroid.show('Change currency successfully', ToastAndroid.SHORT)
+    this.setModalCurrency(!this.state.modalCurrency);
+    this.props.navigation.push("Home", {
+      currence: this.props.currence
+    })
   }
   render() {
     return (
